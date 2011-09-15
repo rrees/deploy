@@ -6,6 +6,9 @@ import org.scalatest.FlatSpec
 import java.net.ServerSocket
 import net.liftweb.util.TimeHelpers._
 import concurrent.ops._
+import model._
+
+
 
 class TasksTest extends FlatSpec with ShouldMatchers {
   "block firewall task" should "use configurable path" in {

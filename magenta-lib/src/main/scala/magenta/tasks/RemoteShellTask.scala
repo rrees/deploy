@@ -1,6 +1,8 @@
 package magenta
 package tasks
 
+import model._
+
 trait RemoteShellTask extends ShellTask {
   def host: Host
   lazy val remoteCommandLine = commandLine on host

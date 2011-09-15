@@ -9,34 +9,21 @@ import com.mongodb.WriteConcern
 import util.Random
 import com.mongodb.casbah.commons.MongoDBObject
 
-object MongoStorage {
-  private lazy val mongoConn = MongoConnection()
-  private lazy val db = mongoConn("magenta")
+import com.novus.salat._
+import dao.SalatDAO
+import model._
 
-  def collection(name: String) = db(name)
+
+
+case class TestApp(name: String, id: ObjectId = ObjectId.get) {
+  def save() { TestApp.save(this) }
 }
 
-case class TestApp(name: String, _id: ObjectId = ObjectId.get) {
-  def save() = TestApp.save(this)
-}
 
-object TestApp {
-  private lazy val collection = MongoStorage.collection("test_app")
-
+object TestApp extends SalatDAO[TestApp, ObjectId](collection = MongoStorage.collection("test_app")) {
   collection.ensureIndex(Map("name" -> 1), "unique_name", true)
-  collection.setWriteConcern(WriteConcern.SAFE)
-
-  def save(a: TestApp) = collection += MongoDBObject("name" -> a.name, "_id" -> a._id)
-
-  def loadById(id: ObjectId): Option[TestApp] = collection.findOneByID(id) flatMap conv
-
-
-  private def conv(dbObject: DBObject): Option[TestApp] = for {
-    name <- dbObject.getAs[String]("name")
-    id <- dbObject.getAs[ObjectId]("_id")
-  } yield TestApp(name, id)
-
 }
+
 
 class HackingInSomeDataTest extends Specification {
 
@@ -46,7 +33,7 @@ class HackingInSomeDataTest extends Specification {
       val newApp = TestApp("Some new app: " +  Random.nextString(10))
       newApp.save()
 
-      val loadedApp = TestApp.loadById(newApp._id) getOrElse failure("not loaded")
+      val loadedApp = TestApp.findOneByID(newApp.id) getOrElse failure("not loaded")
 
       newApp must_== loadedApp
     }

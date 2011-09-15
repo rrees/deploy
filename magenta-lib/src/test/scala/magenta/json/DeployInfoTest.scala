@@ -4,6 +4,8 @@ package json
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 
+import model._
+
 
 class DeployInfoTest  extends FlatSpec with ShouldMatchers {
   val deployInfoSample = """

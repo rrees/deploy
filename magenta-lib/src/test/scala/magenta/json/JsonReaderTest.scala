@@ -4,6 +4,7 @@ package json
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FlatSpec
 import java.io.File
+import model._
 
 class JsonReaderTest extends FlatSpec with ShouldMatchers {
   val contentApiExample = """

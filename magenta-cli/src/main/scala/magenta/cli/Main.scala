@@ -5,6 +5,7 @@ import java.io.File
 import json.{DeployInfoJsonReader, JsonReader}
 import scopt.OptionParser
 import tasks.CommandLocator
+import model.Host
 
 object Main extends scala.App {
 

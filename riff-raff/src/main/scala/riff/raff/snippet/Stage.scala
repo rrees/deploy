@@ -4,7 +4,7 @@ import net.liftweb._
 import http.S
 import net.liftweb.util.Helpers._
 import riff.raff.Config
-import magenta._
+import magenta.model._
 
 class Stage {
   lazy val stage = S.param("stage").openOr("CODE")

@@ -1,6 +1,8 @@
 package magenta
 package tasks
 
+import model._
+
 // represents a command line to execute
 //  including the ability to actually execute and become remote
 case class CommandLine(commandLine: List[String]) {

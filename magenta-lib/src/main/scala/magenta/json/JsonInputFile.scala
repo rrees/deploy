@@ -4,6 +4,7 @@ package json
 import net.liftweb.json._
 import io.Source
 import java.io.File
+import model._
 
 
 case class JsonInputFile(

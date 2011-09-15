@@ -1,6 +1,8 @@
 package magenta
 package json
 
+import model._
+
 import net.liftweb.json._
 import io.Source
 import java.io.File

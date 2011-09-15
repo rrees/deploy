@@ -1,6 +1,7 @@
 package magenta
 
 import tasks._
+import model._
 import net.liftweb.util.TimeHelpers._
 
 

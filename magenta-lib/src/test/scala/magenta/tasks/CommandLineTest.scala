@@ -6,6 +6,8 @@ import org.scalatest.FlatSpec
 import collection.mutable.ListBuffer
 import java.io.IOException
 
+import model._
+
 
 class CommandLineTest extends FlatSpec with ShouldMatchers {
 

@@ -3,6 +3,7 @@ package magenta
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import tasks._
+import model._
 import java.io.File
 import net.liftweb.util.TimeHelpers._
 

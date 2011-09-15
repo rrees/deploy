@@ -1,6 +1,7 @@
 package magenta
 
 import tasks.Task
+import model._
 
 
 object Resolver {

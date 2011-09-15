@@ -1,6 +1,8 @@
 package magenta
+package model
 
 import tasks.Task
+
 
 case class Host(
     name: String,
@@ -20,6 +22,9 @@ case class Host(
 }
 
 
+
+
+
 /*
  An action represents a step within a recipe. It isn't executable
  until it's resolved against a particular host.
@@ -31,7 +36,6 @@ trait Action {
 }
 
 
-case class App(name: String)
 
 
 

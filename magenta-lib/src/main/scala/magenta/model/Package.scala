@@ -1,6 +1,8 @@
 package magenta
+package model
 
 import java.io.File
+
 
 case class Package(
   name: String,

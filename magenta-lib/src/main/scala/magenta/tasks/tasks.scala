@@ -3,6 +3,7 @@ package tasks
 
 import java.net.Socket
 import java.io.IOException
+import model._
 
 object CommandLocator {
   var rootPath = "/opt/deploy/bin"

@@ -2,9 +2,10 @@ package magenta
 
 
 import json._
+import tasks._
+import model._
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
-import tasks._
 import java.io.File
 
 class ResolverTest extends FlatSpec with ShouldMatchers {
