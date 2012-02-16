@@ -25,6 +25,7 @@ class CommandLineTest extends FlatSpec with ShouldMatchers {
     def info(s: => String) { recorded += "INFO: " + s }
     def warn(s: => String) { recorded += "WARN: " + s }
     def error(s: => String) { recorded += "ERROR: " + s }
+    def except(t: Throwable) { recorded += "EXCEPT: " + t.getStackTraceString }
     def context[T](s: => String)(block: => T) = {
       recorded += "START-CONTEXT: " + s
       try block finally recorded += "END-CONTEXT: " + s

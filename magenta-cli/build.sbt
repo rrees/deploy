@@ -4,7 +4,9 @@ import java.util.jar.Attributes
 
 libraryDependencies ++= Seq(
     "com.github.scopt" % "scopt_2.9.0-1" % "1.1.1",
-    "net.databinder" %% "dispatch-http" % "0.8.5"
+    "net.databinder" %% "dispatch-http" % "0.8.5",
+    "ch.qos.logback" % "logback-core" % "1.0.0",
+    "ch.qos.logback" % "logback-classic" % "1.0.0"
 )
 
 seq(sbtassembly.Plugin.assemblySettings: _*)

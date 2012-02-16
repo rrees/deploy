@@ -8,6 +8,8 @@ import tasks.CommandLocator
 import HostList._
 import com.decodified.scalassh.PublicKeyLogin.DefaultKeyLocations
 import com.decodified.scalassh.{SshLogin, SimplePasswordProducer, PublicKeyLogin}
+import ch.qos.logback.classic.{Logger, Level}
+import org.slf4j.LoggerFactory
 
 object Main extends scala.App {
 
@@ -50,13 +52,6 @@ object Main extends scala.App {
     def localArtifactDir = _localArtifactDir
   }
 
-  object CommandLineOutput extends Output with IndentingContext {
-    def verbose(s: => String) { if (Config.verbose) Console.out.println(indent(s)) }
-    def info(s: => String) { Console.out.println(indent(s)) }
-    def warn(s: => String) { Console.out.println(indent("WARN: " + s)) }
-    def error(s: => String) { Console.err.println(indent(s)) }
-  }
-
   object ManagementBuildInfo {
     lazy val version = Option(getClass.getPackage.getImplementationVersion) getOrElse "DEV"
   }
@@ -72,7 +67,9 @@ object Main extends scala.App {
     opt("t", "host", "only deply to the named host", { h => Config.host = Some(h) })
 
     separator("\n  Diagnostic options:")
-    opt("v", "verbose", "verbose logging", { Config.verbose = true } )
+    opt("v", "verbose", "verbose logging", {
+      LoggerFactory.getLogger("magenta").asInstanceOf[Logger].setLevel(Level.DEBUG)
+    } )
     opt("n", "dry-run", "don't execute any tasks, just show what would be done", { Config.dryRun = true })
 
     separator("\n  Advanced options:")
@@ -95,7 +92,7 @@ object Main extends scala.App {
     Some(PublicKeyLogin(System.getenv("USER"), SimplePasswordProducer(passphrase), DefaultKeyLocations))
   } else None
 
-  Log.current.withValue(CommandLineOutput) {
+//  Log.current.withValue(CommandLineOutput) {
     if (parser.parse(args)) {
       try {
         Log.info("%s build %s" format (programName, programVersion))
@@ -153,10 +150,8 @@ object Main extends scala.App {
           parser.showUsage
         case e: Exception =>
           Log.error("FATAL: " + e.getMessage)
-          if (Config.verbose) {
-            e.printStackTrace()
-          }
+          Log.except(e)
       }
     }
-  }
+//  }
 }
