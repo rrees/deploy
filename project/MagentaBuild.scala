@@ -14,7 +14,7 @@ object MagentaBuild extends Build {
 
   lazy val cli = magentaProject("magenta-cli") dependsOn(lib)
 
-  lazy val riffraff = magentaPlayProject("riff-raff") dependsOn(lib)
+  lazy val riffraff = magentaPlayProject("riff-raff") dependsOn(lib) dependsOn(uri("git://github.com/guardian/scala-dynamo.git#dde82df76ad8b470a11b2e1f8d9ed84fd088ab36"))
 
   val liftVersion = "2.4-M4"
 

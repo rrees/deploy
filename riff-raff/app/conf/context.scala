@@ -31,11 +31,14 @@ class Configuration(val application: String, val webappConfDirectory: String = "
     lazy val verbose = configuration.getStringProperty("logging").map(_.equalsIgnoreCase("VERBOSE")).getOrElse(false)
   }
 
-  object s3 {
+  object aws {
     def credentials(accessKey: String) = {
-      val secretKey = configuration.getStringProperty("s3.secretAccessKey.%s" format accessKey).getOrException("No S3 secret access key configured for %s" format accessKey)
+      val secretKey = configuration.getStringProperty("aws.secretAccessKey.%s" format accessKey).
+        getOrException("No AWS secret access key configured for %s (should be configured as aws.secretAccessKey.<accessKey>" format accessKey)
       S3Credentials(accessKey,secretKey)
     }
+    lazy val dynamoDbKey = configuration.getStringProperty("aws.dynamodb.accessKey").getOrException("No AWS key specified for DynamoDB to use")
+    lazy val dynamoTablePrefix = configuration.getStringProperty("aws.dynamodb.tablePrefix").getOrElse("riffraff")
   }
 
   object irc {
