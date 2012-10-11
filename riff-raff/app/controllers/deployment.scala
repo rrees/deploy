@@ -20,10 +20,12 @@ import magenta.Deployer
 import magenta.Stage
 import play.api.libs.json.Json
 import org.joda.time.format.DateTimeFormat
+import datastore.DataStore
+import lifecycle.Lifecycle
 
-object DeployController extends Logging {
+object DeployController extends Logging with Lifecycle {
   val sink = new MessageSink {
-    def message(uuid: UUID, stack: MessageStack) { update(uuid){_ + stack} }
+    def message(uuid: UUID, stack: MessageStack) { update(uuid, stack) }
   }
   def init() { MessageBroker.subscribe(sink) }
   def shutdown() { MessageBroker.unsubscribe(sink) }
@@ -32,25 +34,19 @@ object DeployController extends Logging {
 
   val library = Agent(Map.empty[UUID,Agent[DeployRecord]])
 
-  def create(recordType: Task.Type, params: DeployParameters): DeployRecord = {
+  def create(recordType: Task.Value, params: DeployParameters): DeployRecord = {
     val uuid = java.util.UUID.randomUUID()
-    val record = DeployRecord(recordType, uuid, params, DeployInfoManager.deployInfo)
+    val record = DeployRecord(recordType, uuid, params)
     library send { _ + (uuid -> Agent(record)) }
+    DataStore.createDeploy(record)
     await(uuid)
   }
 
-  def update(uuid:UUID)(transform: DeployRecord => DeployRecord) {
+  def update(uuid:UUID, stack: MessageStack) {
     library()(uuid) send { record =>
-      MessageBroker.withUUID(uuid)(transform(record))
+      MessageBroker.withUUID(uuid)(record + stack)
     }
-  }
-
-  def updateWithContext()(transform: DeployRecord => DeployRecord) {
-    val mainThreadContext = MessageBroker.peekContext()
-    val uuid = mainThreadContext._1
-    library()(uuid) send { record =>
-      MessageBroker.pushContext(mainThreadContext)(transform(record))
-    }
+    DataStore.updateDeploy(uuid, stack)
   }
 
   def preview(params: DeployParameters): UUID = {

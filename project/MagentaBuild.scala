@@ -32,7 +32,8 @@ object MagentaBuild extends Build {
       },
       templatesImport ++= Seq(
         "magenta._",
-        "views.html.helper.magenta._"
+        "views.html.helper.magenta._",
+        "org.bson.types.ObjectId"
       )
   )
 

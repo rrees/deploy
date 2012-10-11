@@ -38,6 +38,12 @@ class Configuration(val application: String, val webappConfDirectory: String = "
     }
   }
 
+  object datastore {
+    object mongo {
+
+    }
+  }
+
   object irc {
     lazy val isConfigured = name.isDefined && host.isDefined && channel.isDefined
     lazy val name = configuration.getStringProperty("irc.name")

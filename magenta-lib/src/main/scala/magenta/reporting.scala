@@ -1,5 +1,7 @@
 package magenta
 
+import tasks.Task
+
 object RunState extends Enumeration {
   type State = Value
   val NotRunning = Value("Not running")
@@ -109,6 +111,17 @@ case class ReportTree(messageState: MessageState, children: List[ReportTree] = N
   lazy val allMessages: Seq[MessageState] = (messageState :: children.flatMap(_.allMessages)).sortWith{ (left, right) =>
     left.message.time.getMillis < right.message.time.getMillis
   }
+
+  lazy val tasks = {
+    allMessages flatMap {
+      _.message match {
+        case taskList:TaskList => taskList.taskList
+        case _ => Nil
+      }
+    }
+  }
+
+  lazy val hostNames = tasks.flatMap(_.taskHosts).map(_.name).distinct
 
   def appendChild(newChild: Message): ReportTree = {
     ReportTree(messageState, children ::: List(ReportTree(MessageState(newChild))))

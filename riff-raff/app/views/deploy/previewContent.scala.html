@@ -11,46 +11,45 @@ case RunState.Failed => {
     }
 </div>
 }
+case RunState.Completed => {
+    <div class="alert alert-success">
+        <h3>Preview of hosts affected and tasks that will be executed</h3>
+        @helper.form(action=routes.Deployment.processForm) {
+        <div>
+            <ul class="magenta-list">
+                @if(record.report.hostNames.isEmpty) {
+                    <li>No hosts found</li>
+                }
+                @record.report.hostNames.zipWithIndex.map { hostTuple =>
+                    <li><span class="preview-host"><input type="checkbox" name="hosts[@hostTuple._2]" value="@hostTuple._1" checked="true"/>@hostTuple._1</span></li>
+                }
+            </ul>
+        </div>
+        <div>
+            <ul class="magenta-list">
+                @if(record.report.tasks.isEmpty) {
+                <li>No tasks generated</li>
+                }
+                @record.report.tasks.map { task =>
+                <li><span class="preview-task">@task.fullDescription</span></li>
+                }
+            </ul>
+        </div>
+
+        <input type="hidden" name="project" value="@record.buildName"/>
+        <input type="hidden" name="build" value="@record.buildId"/>
+        <input type="hidden" name="stage" value="@record.stage.name"/>
+
+        <div class="actions">
+            <button name="action" type="submit" value="deploy" class="btn btn-danger">Deploy Now</button>
+            <a href="@routes.Application.index()" class="btn btn-inverse">Cancel</a>
+        </div>
+        }
+    </div>
+}
 case _ => {}
 } }
 
-@record.context.map{ context =>
-  <div class="alert alert-success">
-    <h3>Preview of hosts affected and tasks that will be executed</h3>
-      @helper.form(action=routes.Deployment.processForm) {
-      <div>
-    <ul class="magenta-list">
-        @if(context.hostNames.isEmpty) {
-          <li>No hosts found</li>
-        }
-        @context.hostNames.zipWithIndex.map { hostTuple =>
-        <li><span class="preview-host"><input type="checkbox" name="hosts[@hostTuple._2]" value="@hostTuple._1" checked="true"/>@hostTuple._1</span></li>
-
-        }
-    </ul>
-  </div>
-  <div>
-    <ul class="magenta-list">
-        @if(context.tasks.isEmpty) {
-        <li>No tasks generated</li>
-        }
-        @context.tasks.map { task =>
-        <li><span class="preview-task">@task.fullDescription</span></li>
-        }
-    </ul>
-  </div>
-
-      <input type="hidden" name="project" value="@record.buildName"/>
-      <input type="hidden" name="build" value="@record.buildId"/>
-      <input type="hidden" name="stage" value="@record.stage.name"/>
-
-      <div class="actions">
-          <button name="action" type="submit" value="deploy" class="btn btn-danger">Deploy Now</button>
-          <a href="@routes.Application.index()" class="btn btn-inverse">Cancel</a>
-      </div>
-      }
-  </div>
-}
 
 <ul class="magenta-reporttree">
     @snippets.reportTree(record.report)
